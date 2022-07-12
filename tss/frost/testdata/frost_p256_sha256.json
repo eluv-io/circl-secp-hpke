@@ -1,0 +1,61 @@
+{
+  "config": {
+    "MAX_SIGNERS": "3",
+    "NUM_SIGNERS": "2",
+    "MIN_SIGNERS": "2",
+    "name": "FROST(P-256, SHA-256)",
+    "group": "P-256",
+    "hash": "SHA-256"
+  },
+  "inputs": {
+    "group_secret_key": "8ba9bba2e0fd8c4767154d35a0b7562244a4aaf6f36c8fb8735fa48b301bd8de",
+    "group_public_key": "023a309ad94e9fe8a7ba45dfc58f38bf091959d3c99cfbd02b4dc00585ec45ab70",
+    "message": "74657374",
+    "signers": {
+      "1": {
+        "signer_share": "0c9c1a0fe806c184add50bbdcac913dda73e482daf95dcb9f35dbb0d8a9f7731"
+      },
+      "2": {
+        "signer_share": "8d8e787bef0ff6c2f494ca45f4dad198c6bee01212d6c84067159c52e1863ad5"
+      },
+      "3": {
+        "signer_share": "0e80d6e8f6192c003b5488ce1eec8f5429587d48cf001541e713b2d53c09d928"
+      }
+    }
+  },
+  "round_one_outputs": {
+    "participants": "1,3",
+    "signers": {
+      "1": {
+        "hiding_nonce": "acad0caab1466c3a075297b7ab651c19cb073964b0d656b9e1483a8dfcbae1d1",
+        "binding_nonce": "58684e8a3a82d4e4b3ae65bbcee6a5f832a55f84559fdb37b3459aa535ae777a",
+        "hiding_nonce_commitment": "0352a44580c702ebbe6c865566937dac503c5b8dbed3953c15b8f83e228614b9a1",
+        "binding_nonce_commitment": "0313ea8be05e83641fe8c5b5564eef02c77b898addf1d8788611910912ff7444cc",
+        "binding_factor_input": "7a753fed12531fbcd151e1d84702927c39063e780e91c01f02bd11b60d7632bf66abdb7c24a9611565dd71a13492ba16306a602b00b323757aee47f7ebfa7fcb0001",
+        "binding_factor": "4b6f5a676853c5319975edcbfa2e39a30a3080dc64d0799604a97e5d0e668aab"
+      },
+      "3": {
+        "hiding_nonce": "3b85caa37d764a7d7e357b38feacfe5aa3c5b517af813e47c84321a68bf0113a",
+        "binding_nonce": "3413506e1567a91978686c62e2646a07d84489892579a682e2036d128ea33864",
+        "hiding_nonce_commitment": "0391c2edb8ba65318b372274ebc937da08270e2efe21337c65294783e69a6d3e99",
+        "binding_nonce_commitment": "03c325c56fc397957875ca50551e8f9d4540b77d02de23821e01e8363fa3e6bd2b",
+        "binding_factor_input": "7a753fed12531fbcd151e1d84702927c39063e780e91c01f02bd11b60d7632bf66abdb7c24a9611565dd71a13492ba16306a602b00b323757aee47f7ebfa7fcb0003",
+        "binding_factor": "d2389dd98e4872dd35ecb47e70314b48ee1ece5892de1f08a86adce7d2c79eeb"
+      }
+    }
+  },
+  "round_two_outputs": {
+    "participants": "1,3",
+    "signers": {
+      "1": {
+        "sig_share": "5ac3bca8b2d9c2bc7c036e3f03c364806b2dbed2c884cd57e3381c1747d6432a"
+      },
+      "3": {
+        "sig_share": "477932b617f3e501fa54a7dc67b4f72353c257bacb0497574ca6fde8f1f40d6c"
+      }
+    }
+  },
+  "final_output": {
+    "sig": "0219f3bddb7c97d4ce69ea226195fb3ed435fc9063bbeb3a45f46a3a384e0229baa23cef5ecacda7be7658161b6b785ba3bef0168d938964af2fdf1a0039ca5096"
+  }
+}
