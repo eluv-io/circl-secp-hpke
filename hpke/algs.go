@@ -15,6 +15,7 @@ import (
 	"github.com/cloudflare/circl/dh/x448"
 	"github.com/cloudflare/circl/ecc/p384"
 	"github.com/cloudflare/circl/kem"
+	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/crypto/hkdf"
 )
@@ -35,6 +36,8 @@ const (
 	// KEM_X448_HKDF_SHA512 is a KEM using X448 Diffie-Hellman function and
 	// HKDF with SHA-512.
 	KEM_X448_HKDF_SHA512 KEM = 0x21
+	// KEM_K256_HKDF_SHA256 is a KEM using K256 curve and HKDF with SHA-256.
+	KEM_K256_HKDF_SHA256 KEM = 0x30
 )
 
 // IsValid returns true if the KEM identifier is supported by the HPKE package.
@@ -44,7 +47,8 @@ func (k KEM) IsValid() bool {
 		KEM_P384_HKDF_SHA384,
 		KEM_P521_HKDF_SHA512,
 		KEM_X25519_HKDF_SHA256,
-		KEM_X448_HKDF_SHA512:
+		KEM_X448_HKDF_SHA512,
+		KEM_K256_HKDF_SHA256:
 		return true
 	default:
 		return false
@@ -57,6 +61,8 @@ func (k KEM) Scheme() kem.AuthScheme {
 	switch k {
 	case KEM_P256_HKDF_SHA256:
 		return dhkemp256hkdfsha256
+	case KEM_K256_HKDF_SHA256:
+		return dhkemk256hkdfsha256
 	case KEM_P384_HKDF_SHA384:
 		return dhkemp384hkdfsha384
 	case KEM_P521_HKDF_SHA512:
@@ -72,7 +78,7 @@ func (k KEM) Scheme() kem.AuthScheme {
 
 func (k KEM) validatePublicKey(pk kem.PublicKey) bool {
 	switch k {
-	case KEM_P256_HKDF_SHA256, KEM_P384_HKDF_SHA384, KEM_P521_HKDF_SHA512:
+	case KEM_P256_HKDF_SHA256, KEM_K256_HKDF_SHA256, KEM_P384_HKDF_SHA384, KEM_P521_HKDF_SHA512:
 		pub, ok := pk.(*shortKEMPubKey)
 		return ok && k == pub.scheme.id && pub.Validate()
 	case KEM_X25519_HKDF_SHA256, KEM_X448_HKDF_SHA512:
@@ -85,7 +91,7 @@ func (k KEM) validatePublicKey(pk kem.PublicKey) bool {
 
 func (k KEM) validatePrivateKey(sk kem.PrivateKey) bool {
 	switch k {
-	case KEM_P256_HKDF_SHA256, KEM_P384_HKDF_SHA384, KEM_P521_HKDF_SHA512:
+	case KEM_P256_HKDF_SHA256, KEM_K256_HKDF_SHA256, KEM_P384_HKDF_SHA384, KEM_P521_HKDF_SHA512:
 		priv, ok := sk.(*shortKEMPrivKey)
 		return ok && k == priv.scheme.id && priv.Validate()
 	case KEM_X25519_HKDF_SHA256, KEM_X448_HKDF_SHA512:
@@ -241,8 +247,8 @@ func (a AEAD) CipherLen(mLen uint) uint {
 }
 
 var (
-	dhkemp256hkdfsha256, dhkemp384hkdfsha384, dhkemp521hkdfsha512 shortKEM
-	dhkemx25519hkdfsha256, dhkemx448hkdfsha512                    xKEM
+	dhkemp256hkdfsha256, dhkemk256hkdfsha256, dhkemp384hkdfsha384, dhkemp521hkdfsha512 shortKEM
+	dhkemx25519hkdfsha256, dhkemx448hkdfsha512                                         xKEM
 )
 
 func init() {
@@ -251,6 +257,12 @@ func init() {
 	dhkemp256hkdfsha256.kemBase.name = "HPKE_KEM_P256_HKDF_SHA256"
 	dhkemp256hkdfsha256.kemBase.Hash = crypto.SHA256
 	dhkemp256hkdfsha256.kemBase.dhKEM = dhkemp256hkdfsha256
+
+	dhkemk256hkdfsha256.Curve = secp256k1.S256()
+	dhkemk256hkdfsha256.kemBase.id = KEM_K256_HKDF_SHA256
+	dhkemk256hkdfsha256.kemBase.name = "HPKE_KEM_K256_HKDF_SHA256"
+	dhkemk256hkdfsha256.kemBase.Hash = crypto.SHA256
+	dhkemk256hkdfsha256.kemBase.dhKEM = dhkemk256hkdfsha256
 
 	dhkemp384hkdfsha384.Curve = p384.P384()
 	dhkemp384hkdfsha384.kemBase.id = KEM_P384_HKDF_SHA384
